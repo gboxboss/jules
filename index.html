@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Tool &amp; Equipment Voucher – Claim Now</title>
+    <title>Exclusive Reward – Claim Now</title>
     <meta name="robots" content="noindex, nofollow">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
     
     <style>
         *, *::before, *::after {
@@ -17,29 +17,32 @@
         }
 
         :root {
-            --primary-accent: #d01824;
-            --primary-accent-dark: #a8101a;
-            --primary-accent-tint: #ffebed;
-            --card-surface: #ffffff;
-            --page-bg: #f1f5f9;
-            --heading-color: #0f172a;
-            --text-regular: #334155;
-            --text-subtle: #64748b;
-            --stroke-color: #cbd5e1;
-            --font-main: 'Inter', system-ui, -apple-system, sans-serif;
-            --font-code: 'JetBrains Mono', monospace;
+            /* Coastal Navy Palette */
+            --primary: #0e2238;
+            --primary-hover: #071320;
+            --primary-soft: #eaf1f8;
+            --accent: #2c4d6f;
+            
+            --text-dark: #121820;
+            --text-muted: #536271;
+            --text-subtle: #8a9ba8;
+            --surface-border: #dde5ed;
+            --canvas: #f4f7fa;
+            
+            --font-main: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-display: 'JetBrains Mono', monospace;
         }
 
         html, body {
             height: 100dvh;
             overflow: hidden;
-            background: var(--page-bg);
-            color: var(--heading-color);
+            background: var(--canvas);
+            color: var(--text-dark);
             font-family: var(--font-main);
-            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .page {
+        .viewport-wrapper {
             width: 100%;
             height: 100%;
             display: flex;
@@ -49,7 +52,7 @@
             padding: 2vh 4vw;
         }
 
-        .container {
+        .content-frame {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -57,199 +60,204 @@
             max-width: 390px;
             height: 100%;
             justify-content: center;
-            gap: 2.2vh;
+            gap: 2.4vh;
         }
 
-        .voucher {
+        .coupon-panel {
             width: 100%;
-            background: var(--card-surface);
-            border-radius: 12px;
+            background: #ffffff;
+            border-radius: 14px;
             position: relative;
-            box-shadow: 0 1vh 3vh rgba(208, 24, 36, 0.09), 0 1px 3px rgba(0, 0, 0, 0.05);
-            border: 2px dashed var(--stroke-color);
-            padding: clamp(16px, 2.8vh, 22px);
+            box-shadow: 0 1.2vh 3.5vh rgba(14, 34, 56, 0.08);
+            border: 2px dashed var(--surface-border);
+            padding: clamp(18px, 3vh, 26px);
             display: flex;
             flex-direction: column;
-            gap: 1.4vh;
+            gap: 1.5vh;
             flex-shrink: 0;
-            transition: transform 0.2s ease, border-color 0.2s ease;
+            transition: transform 0.25s ease, border-color 0.25s ease;
         }
 
-        .voucher:hover {
+        .coupon-panel:hover {
             transform: translateY(-2px);
-            border-color: #f87171;
+            border-color: #9cb5cb;
         }
 
-        .voucher::before, .voucher::after {
+        .coupon-panel::before,
+        .coupon-panel::after {
             content: '';
             position: absolute;
             top: 50%;
             width: 22px;
             height: 22px;
-            background: var(--page-bg);
+            background: var(--canvas);
             border-radius: 50%;
-            transform: translateY(-50%);
-            border: 2px dashed var(--stroke-color);
-            z-index: 2;
+            border: 2px dashed var(--surface-border);
+            z-index: 3;
         }
 
-        .voucher::before {
+        .coupon-panel::before {
             left: -13px;
             border-right-color: transparent;
             border-top-color: transparent;
             transform: translateY(-50%) rotate(45deg);
         }
 
-        .voucher::after {
+        .coupon-panel::after {
             right: -13px;
             border-left-color: transparent;
             border-bottom-color: transparent;
             transform: translateY(-50%) rotate(45deg);
         }
 
-        .v-top {
+        .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-            padding-bottom: 1.3vh;
+            border-bottom: 1px solid var(--surface-border);
+            padding-bottom: 1.5vh;
+            min-height: 44px;
         }
 
-        .v-logo {
-            height: clamp(26px, 4.5vh, 36px);
-            max-width: 175px;
+        .header-logo {
+            height: clamp(26px, 4.6vh, 36px);
+            max-width: 150px;
             object-fit: contain;
             display: block;
         }
 
-        .v-badge {
-            background: var(--primary-accent-tint);
-            color: var(--primary-accent);
-            font-size: clamp(0.6rem, 1.2vh, 0.72rem);
+        .header-fallback {
+            font-size: 0.95rem;
             font-weight: 800;
-            padding: 4px 10px;
-            border-radius: 999px;
+            letter-spacing: 2px;
+            color: var(--primary);
             text-transform: uppercase;
-            letter-spacing: 0.8px;
-            border: 1px solid rgba(208, 24, 36, 0.15);
         }
 
-        .v-mid {
+        .status-pill {
+            background: var(--primary-soft);
+            color: var(--primary);
+            font-size: clamp(0.6rem, 1.2vh, 0.72rem);
+            font-weight: 700;
+            padding: 5px 11px;
+            border-radius: 100px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+        }
+
+        .panel-center {
             text-align: center;
             padding: 0.8vh 0;
         }
 
-        .v-label {
-            font-size: clamp(0.62rem, 1.25vh, 0.72rem);
-            color: var(--text-subtle);
+        .balance-tag {
+            font-size: clamp(0.62rem, 1.2vh, 0.72rem);
+            color: var(--text-muted);
             text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 1.8px;
-            margin-bottom: 3px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            margin-bottom: 4px;
         }
 
-        .v-amount {
-            font-family: var(--font-code);
-            font-size: clamp(2.4rem, 4.8vh, 3.1rem);
+        .balance-val {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 5vh, 3.2rem);
             font-weight: 800;
-            color: var(--primary-accent);
+            color: var(--primary);
             line-height: 1;
             letter-spacing: -1px;
         }
 
-        .v-amount span {
-            font-size: clamp(1.2rem, 2.4vh, 1.5rem);
+        .balance-val span {
+            font-size: clamp(1.2rem, 2.5vh, 1.5rem);
             vertical-align: text-top;
             margin-right: 2px;
+            color: var(--accent);
         }
 
-        .v-bot {
+        .panel-footer {
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            padding-top: 0.8vh;
+            padding-top: 1vh;
         }
 
-        .v-barcode {
+        .code-lines {
             display: flex;
-            gap: 2.5px;
+            gap: 2px;
             height: clamp(20px, 3.8vh, 26px);
             align-items: stretch;
-            opacity: 0.65;
+            opacity: 0.75;
         }
 
-        .v-barcode i {
-            background: var(--heading-color);
+        .code-lines i {
+            background: var(--primary);
             border-radius: 1px;
         }
 
-        .v-status {
+        .verification-badge {
             font-size: clamp(0.65rem, 1.3vh, 0.75rem);
-            font-weight: 800;
-            color: var(--primary-accent);
+            font-weight: 700;
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 5px;
             letter-spacing: 0.5px;
         }
 
-        .v-status::before {
+        .verification-badge::before {
             content: '';
             width: 7px;
             height: 7px;
             border-radius: 50%;
-            background: var(--primary-accent);
-            animation: pulse-dot 1.8s infinite ease-in-out;
+            background: #10b981;
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
         }
 
-        @keyframes pulse-dot {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.35); opacity: 0.6; }
-        }
-
-        .steps {
+        .instruction-sequence {
             width: 100%;
-            background: var(--card-surface);
-            border-radius: 12px;
-            padding: clamp(6px, 1vh, 10px) 22px;
-            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
-            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: clamp(6px, 1.2vh, 10px) 22px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+            border: 1px solid var(--surface-border);
             flex-shrink: 1;
             position: relative;
         }
 
-        .steps::before {
+        .instruction-sequence::before {
             content: '';
             position: absolute;
             left: 35px;
-            top: clamp(22px, 3.2vh, 28px);
-            bottom: clamp(22px, 3.2vh, 28px);
+            top: clamp(24px, 3.5vh, 32px);
+            bottom: clamp(24px, 3.5vh, 32px);
             width: 2px;
-            background: #e2e8f0;
+            background: var(--surface-border);
             z-index: 0;
+            opacity: 0.7;
         }
 
-        .step {
+        .seq-item {
             display: flex;
             align-items: center;
-            gap: 14px;
-            padding: clamp(10px, 1.8vh, 15px) 0;
+            gap: 16px;
+            padding: clamp(12px, 1.9vh, 16px) 0;
             position: relative;
             z-index: 1;
         }
 
-        .step:not(:last-child) {
-            border-bottom: 1px solid #f8fafc;
+        .seq-item:not(:last-child) {
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        .s-icon {
+        .seq-circle {
             width: 28px;
             height: 28px;
             border-radius: 50%;
             background: #ffffff;
-            border: 2px solid var(--stroke-color);
-            color: var(--text-regular);
-            font-weight: 800;
+            border: 2px solid var(--surface-border);
+            color: var(--text-muted);
+            font-weight: 700;
             font-size: 0.8rem;
             display: flex;
             align-items: center;
@@ -259,87 +267,89 @@
             z-index: 2;
         }
 
-        .step:last-child .s-icon {
-            background: var(--primary-accent);
-            border-color: var(--primary-accent);
+        .seq-item:last-child .seq-circle {
+            background: var(--primary);
+            border-color: var(--primary);
             color: #ffffff;
-            box-shadow: 0 2px 8px rgba(208, 24, 36, 0.35);
+            box-shadow: 0 2px 8px rgba(14, 34, 56, 0.35);
         }
 
-        .s-txt {
-            font-size: clamp(0.74rem, 1.5vh, 0.84rem);
+        .seq-content {
+            font-size: clamp(0.75rem, 1.5vh, 0.85rem);
             font-weight: 600;
-            color: var(--heading-color);
+            color: var(--text-dark);
             flex: 1;
             line-height: 1.35;
         }
 
-        .cta-wrap {
+        .action-area {
             width: 100%;
             text-align: center;
             flex-shrink: 0;
         }
 
-        .btn {
+        .action-button {
             width: 100%;
-            padding: clamp(13px, 2.4vh, 17px);
-            font-size: clamp(0.98rem, 1.95vh, 1.08rem);
-            font-weight: 800;
+            padding: clamp(14px, 2.3vh, 18px);
+            font-size: clamp(0.95rem, 2vh, 1.05rem);
+            font-weight: 700;
             color: #ffffff;
-            background: var(--primary-accent);
+            background: var(--primary);
             border: none;
-            border-radius: 999px;
+            border-radius: 100px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
-            transition: transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease;
-            box-shadow: 0 4px 16px rgba(208, 24, 36, 0.28);
-            min-height: clamp(48px, 6.8vh, 58px);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 5px 16px rgba(14, 34, 56, 0.25);
+            min-height: clamp(50px, 6.8vh, 58px);
             margin-bottom: 8px;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
 
-        .btn:hover {
-            background: var(--primary-accent-dark);
+        .action-button:hover {
+            background: var(--primary-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(208, 24, 36, 0.35);
+            box-shadow: 0 8px 22px rgba(14, 34, 56, 0.32);
         }
 
-        .btn:active {
+        .action-button:active {
             transform: translateY(0);
         }
 
-        .btn-txt {
+        .btn-label {
             transition: opacity 0.2s ease;
         }
 
-        .spinner {
+        .indicator-spinner {
             position: absolute;
             width: 22px;
             height: 22px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.25);
             border-top-color: #ffffff;
             border-radius: 50%;
             opacity: 0;
-            animation: spin-anim 0.8s linear infinite;
+            animation: spin 0.75s linear infinite;
         }
 
-        .btn.loading .btn-txt {
+        .action-button.loading .btn-label {
             opacity: 0;
         }
 
-        .btn.loading .spinner {
+        .action-button.loading .indicator-spinner {
             opacity: 1;
             pointer-events: none;
         }
 
-        @keyframes spin-anim {
-            to { transform: rotate(360deg); }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
 
-        .note {
+        .disclaimer-note {
             font-size: clamp(0.6rem, 1.2vh, 0.7rem);
             color: var(--text-subtle);
             font-weight: 500;
@@ -347,28 +357,28 @@
     </style>
 </head>
 <body>
-    <div class="page">
-        <div class="container">
+    <div class="viewport-wrapper">
+        <div class="content-frame">
             
-            <div class="voucher">
-                <div class="v-top">
-                    <!-- Clean image rendering with fallback SVG container -->
-                    <img 
-                        src="https://www.freelogovectors.net/wp-content/uploads/2024/03/harbor_freight_logo-freelogovectors.net_.png" 
-                        alt="Retailer Rewards Program" 
-                        class="v-logo"
-                        onerror="this.onerror=null; this.parentElement.innerHTML='<svg width=\'130\' height=\'32\' viewBox=\'0 0 130 32\' fill=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><rect width=\'130\' height=\'32\' rx=\'4\' fill=\'%23d01824\'/><text x=\'50%25\' y=\'21\' text-anchor=\'middle\' font-family=\'Inter, sans-serif\' font-weight=\'900\' font-size=\'14\' fill=\'white\' letter-spacing=\'1.2\'>TOOL REWARD</text></svg><div class=\'v-badge\'>Verified</div>';"
+            <!-- Voucher Display -->
+            <div class="coupon-panel">
+                <div class="panel-header">
+                    <img
+                        src="https://en.cap3000.com/-/media/cap3000/images/enseignes/3893893866_hollisterlogopng.png"
+                        alt="Logo"
+                        class="header-logo"
+                        onerror="this.onerror=null; this.parentElement.innerHTML='<span class=\'header-fallback\'>EXCLUSIVE REWARD</span><div class=\'status-pill\'>Verified</div>';"
                     >
-                    <div class="v-badge">Verified</div>
+                    <div class="status-pill">Reward</div>
                 </div>
 
-                <div class="v-mid">
-                    <div class="v-label">Voucher Value</div>
-                    <div class="v-amount"><span>$</span>500</div>
+                <div class="panel-center">
+                    <div class="balance-tag">Reward Balance</div>
+                    <div class="balance-val"><span>$</span>500</div>
                 </div>
 
-                <div class="v-bot">
-                    <div class="v-barcode">
+                <div class="panel-footer">
+                    <div class="code-lines">
                         <i style="width: 2px"></i>
                         <i style="width: 4px"></i>
                         <i style="width: 1px"></i>
@@ -383,35 +393,37 @@
                         <i style="width: 4px"></i>
                         <i style="width: 1px"></i>
                     </div>
-                    <div class="v-status">ACTIVE</div>
+                    <div class="verification-badge">ACTIVE</div>
                 </div>
             </div>
 
-            <div class="steps">
-                <div class="step">
-                    <div class="s-icon">1</div>
-                    <div class="s-txt">Click the button below</div>
+            <!-- Steps List -->
+            <div class="instruction-sequence">
+                <div class="seq-item">
+                    <div class="seq-circle">1</div>
+                    <div class="seq-content">Click the button below</div>
                 </div>
-                <div class="step">
-                    <div class="s-icon">2</div>
-                    <div class="s-txt">Enter your email &amp; basic info</div>
+                <div class="seq-item">
+                    <div class="seq-circle">2</div>
+                    <div class="seq-content">Enter your email &amp; basic info</div>
                 </div>
-                <div class="step">
-                    <div class="s-icon">3</div>
-                    <div class="s-txt">Complete 4 to 5 required deals</div>
+                <div class="seq-item">
+                    <div class="seq-circle">3</div>
+                    <div class="seq-content">Complete 4 to 5 required deals</div>
                 </div>
-                <div class="step">
-                    <div class="s-icon">4</div>
-                    <div class="s-txt">Receive your voucher once verified</div>
+                <div class="seq-item">
+                    <div class="seq-circle">4</div>
+                    <div class="seq-content">Receive your reward once verified</div>
                 </div>
             </div>
 
-            <div class="cta-wrap">
-                <button class="btn" id="claim-btn">
-                    <span class="btn-txt">Claim Voucher</span>
-                    <span class="spinner"></span>
+            <!-- Action Area -->
+            <div class="action-area">
+                <button class="action-button" id="trigger-btn">
+                    <span class="btn-label">Claim Reward</span>
+                    <span class="indicator-spinner"></span>
                 </button>
-                <div class="note">Available in US, CA, AU, UK</div>
+                <div class="disclaimer-note">Available in US, CA, AU, UK</div>
             </div>
 
         </div>
@@ -419,13 +431,11 @@
 
     <script>
     (function() {
-        const claimBtn = document.getElementById('claim-btn');
-        const targetUrl = 'https://linkthem.net/aff_c?offer_id=4397&aff_id=171242';
+        const trigger = document.getElementById('trigger-btn');
+        const targetUrl = 'https://giftclick.org/aff_c?offer_id=2768&aff_id=171242';
 
-        claimBtn.addEventListener('click', function() {
-            claimBtn.classList.add('loading');
-            claimBtn.setAttribute('disabled', 'true');
-            
+        trigger.addEventListener('click', function() {
+            trigger.classList.add('loading');
             setTimeout(function() {
                 window.location.href = targetUrl;
             }, 800);
