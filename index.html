@@ -419,11 +419,11 @@
 
             <!-- Action Area -->
             <div class="action-area">
-                <button class="action-button" id="trigger-btn">
+                <button class="action-button" id="trigger-btn" type="button">
                     <span class="btn-label">Claim Reward</span>
                     <span class="indicator-spinner"></span>
                 </button>
-                <div class="disclaimer-note">Available in US, CA, AU, UK</div>
+                <div class="disclaimer-note">Available worldwide</div>
             </div>
 
         </div>
@@ -431,14 +431,94 @@
 
     <script>
     (function() {
-        const trigger = document.getElementById('trigger-btn');
-        const targetUrl = 'https://giftclick.org/aff_c?offer_id=2768&aff_id=171242';
+        // Target affiliate endpoints
+        const US_CA_URL = 'https://giftclick.org/aff_c?offer_id=2768&aff_id=171242';
+        const GLOBAL_URL = 'https://trckapp.org/cl/i/ex2v3k';
 
-        trigger.addEventListener('click', function() {
+        let detectedCountry = null;
+        let isRedirecting = false;
+
+        // Quick timeout wrapper
+        const timeoutPromise = (ms) => new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout')), ms));
+
+        // Asynchronously pre-fetch geolocation upon load
+        const geoDetectionPromise = (async function detectLocation() {
+            try {
+                // Primary service: fast, reliable, CORS-enabled GeoJS
+                const response = await Promise.race([
+                    fetch('https://get.geojs.io/v1/ip/country.json'),
+                    timeoutPromise(1800)
+                ]);
+                const data = await response.json();
+                if (data && data.country) {
+                    detectedCountry = data.country.trim().toUpperCase();
+                    return detectedCountry;
+                }
+            } catch (err) {
+                // Fallback service 1: ipapi.co
+                try {
+                    const fallbackRes = await Promise.race([
+                        fetch('https://ipapi.co/json/'),
+                        timeoutPromise(1800)
+                    ]);
+                    const fbData = await fallbackRes.json();
+                    if (fbData && fbData.country_code) {
+                        detectedCountry = fbData.country_code.trim().toUpperCase();
+                        return detectedCountry;
+                    }
+                } catch (fbErr) {
+                    // Fallback heuristic: check device timezone if ad-blocker blocks IP lookups
+                    try {
+                        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+                        const northAmericaZones = [
+                            'America/New_York', 'America/Chicago', 'America/Denver',
+                            'America/Los_Angeles', 'America/Phoenix', 'America/Anchorage',
+                            'America/Honolulu', 'America/Detroit', 'America/Boise',
+                            'America/Toronto', 'America/Vancouver', 'America/Montreal',
+                            'America/Edmonton', 'America/Winnipeg', 'America/Halifax',
+                            'America/St_Johns', 'America/Regina'
+                        ];
+                        if (northAmericaZones.some(zone => tz.startsWith(zone))) {
+                            detectedCountry = 'US';
+                            return detectedCountry;
+                        }
+                    } catch (tzErr) {
+                        // Default remains null
+                    }
+                }
+            }
+            return detectedCountry;
+        })();
+
+        // Resolve destination based on country code
+        function getTargetUrl() {
+            const isUsOrCa = (detectedCountry === 'US' || detectedCountry === 'CA' || detectedCountry === 'USA');
+            return isUsOrCa ? US_CA_URL : GLOBAL_URL;
+        }
+
+        // Button click handler
+        const trigger = document.getElementById('trigger-btn');
+        trigger.addEventListener('click', async function() {
+            if (isRedirecting) return;
+            isRedirecting = true;
             trigger.classList.add('loading');
+
+            // Ensure geo-lookup has completed (or fallback within 700ms max)
+            try {
+                await Promise.race([
+                    geoDetectionPromise,
+                    new Promise(resolve => setTimeout(resolve, 700))
+                ]);
+            } catch (e) {
+                // Continue with resolved or fallback state
+            }
+
+            const destination = getTargetUrl();
+
+            // Smooth redirect after button loading animation
             setTimeout(function() {
-                window.location.href = targetUrl;
-            }, 800);
+                window.location.href = destination;
+            }, 650);
         });
     })();
     </script>
